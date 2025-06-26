@@ -1,0 +1,56 @@
+services:
+  php:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: crm-free-php
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www
+      - ./runtime:/var/www/runtime  # Добавляем volume для runtime
+    environment:
+      DB_HOST: postgres
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      ADMIN_CREATION_TOKEN: ${ADMIN_CREATION_TOKEN}
+    # Добавляем команду для создания папок и установки прав при старте
+    command: sh -c "mkdir -p /var/www/runtime/{cache,debug,logs} && chown -R www-data:www-data /var/www/runtime && chmod -R 775 /var/www/runtime && docker-php-entrypoint php-fpm"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    container_name: crm-free-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./runtime:/var/www/runtime  # Добавляем volume для runtime
+    depends_on:
+      - php
+
+  postgres:
+    image: postgres:13-alpine
+    container_name: crm-free-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  # Явно не объявляем volume для runtime, чтобы он создавался на хосте
