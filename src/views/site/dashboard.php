@@ -255,8 +255,15 @@ AppAsset::register($this);
             resetButton.addEventListener('click', resetTimer);
 
             $('#button-0').click(function() {
-                alert('click');
                 window.open('/site/orders');
+            });
+
+            $('#button-8').click(function() {
+                window.open('/diary/index');
+            });
+
+            $('#button-1').click(function() {
+                window.open('/clients/index');
             });
         });
 

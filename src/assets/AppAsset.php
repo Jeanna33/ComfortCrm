@@ -14,16 +14,15 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/bootstrap.min.css', // Добавьте Bootstrap CSS
+        'css/bootstrap.min.css',
         'css/tailwind.min.css',
         'css/site.css',
     ];
     public $js = [
-
     ];
     public $depends = [
-        'yii\web\YiiAsset',        // Подключает jQuery
-        'yii\bootstrap5\BootstrapAsset',   // Если Bootstrap 5
-        'yii\bootstrap5\BootstrapPluginAsset', // JS для Bootstrap 5
+        'yii\web\YiiAsset',
+        'yii\bootstrap5\BootstrapAsset',
+        'yii\bootstrap5\BootstrapPluginAsset',
     ];
 }

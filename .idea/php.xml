@@ -10,15 +10,11 @@
       <path value="$PROJECT_DIR$/src/vendor/yiisoft/yii2-composer" />
       <path value="$PROJECT_DIR$/src/vendor/theseer/tokenizer" />
       <path value="$PROJECT_DIR$/src/vendor/yiisoft/yii2" />
-      <path value="$PROJECT_DIR$/src/vendor/symfony/var-dumper" />
-      <path value="$PROJECT_DIR$/src/vendor/symfony/yaml" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/service-contracts" />
-      <path value="$PROJECT_DIR$/src/vendor/symfony/string" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-intl-normalizer" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-mbstring" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-intl-grapheme" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-intl-idn" />
-      <path value="$PROJECT_DIR$/src/vendor/symfony/mime" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/finder" />
       <path value="$PROJECT_DIR$/src/vendor/codeception/verify" />
@@ -26,17 +22,13 @@
       <path value="$PROJECT_DIR$/src/vendor/masterminds/html5" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/event-dispatcher" />
       <path value="$PROJECT_DIR$/src/vendor/codeception/module-yii2" />
-      <path value="$PROJECT_DIR$/src/vendor/symfony/event-dispatcher-contracts" />
       <path value="$PROJECT_DIR$/src/vendor/codeception/stub" />
-      <path value="$PROJECT_DIR$/src/vendor/symfony/deprecation-contracts" />
-      <path value="$PROJECT_DIR$/src/vendor/codeception/module-asserts" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/dom-crawler" />
       <path value="$PROJECT_DIR$/src/vendor/codeception/module-filesystem" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/console" />
       <path value="$PROJECT_DIR$/src/vendor/codeception/lib-innerbrowser" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/css-selector" />
       <path value="$PROJECT_DIR$/src/vendor/codeception/lib-web" />
-      <path value="$PROJECT_DIR$/src/vendor/phpunit/phpunit" />
       <path value="$PROJECT_DIR$/src/vendor/codeception/codeception" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/browser-kit" />
       <path value="$PROJECT_DIR$/src/vendor/codeception/lib-asserts" />
@@ -94,6 +86,14 @@
       <path value="$PROJECT_DIR$/src/vendor/yiisoft/widget" />
       <path value="$PROJECT_DIR$/src/vendor/yiisoft/friendly-exception" />
       <path value="$PROJECT_DIR$/src/vendor/yiisoft/factory" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/src/vendor/codeception/module-asserts" />
+      <path value="$PROJECT_DIR$/src/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/mime" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0" />

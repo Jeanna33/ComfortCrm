@@ -13,6 +13,14 @@ $config = [
     ],
     'language' => 'en-US',
     'components' => [
+        'response' => [
+            'formatters' => [
+                \yii\web\Response::FORMAT_JSON => [
+                    'class' => 'yii\web\JsonResponseFormatter',
+                    'prettyPrint' => YII_DEBUG,
+                ],
+            ],
+        ],
         'request' => [
             'cookieValidationKey' => 'QHQ3kFFJuhC2I5Tq4veufpzYRMiHaULE',
             'enableCsrfValidation' => true,
@@ -65,6 +73,7 @@ $config = [
             'rules' => [
                 'admin' => 'admin/default/index',
                 'admin/<controller:\w+>/<action:\w+>' => 'admin/<controller>/<action>',
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'location'],
             ],
         ],
         'authManager' => [

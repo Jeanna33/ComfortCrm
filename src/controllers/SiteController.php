@@ -128,18 +128,15 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $sql = 'SELECT * FROM "Orders"  WHERE is_active = true ORDER BY "created_at"';
-        $AllOrders = Yii::$app->db->createCommand($sql)->queryAll();
-
-        $sql = 'SELECT * FROM "Orders" WHERE is_active = false ORDER BY "created_at"';
-        $EndOrders  = Yii::$app->db->createCommand($sql)->queryAll();
-
         $post_data = Yii::$app->request->post('action');
 
         if($post_data == 'save_order')
         {
             $text = Yii::$app->request->post('name_order');
             $info_about_order = Yii::$app->request->post('info_about_order');
+            $currency = Yii::$app->request->post('currency');
+            $sum_order = Yii::$app->request->post('sum_order');
+            $client = Yii::$app->request->post('client');
 
             $uploadedFile = \yii\web\UploadedFile::getInstanceByName('file_order');
             $filePath = null;
@@ -149,50 +146,130 @@ class SiteController extends Controller
                 mkdir($uploadDir, 0755, true);
             }
 
-            // Generate unique filename
-            $fileName = time() . '_' . $this->sanitizeFilename($uploadedFile->name);
-            $filePath = $uploadDir . $fileName;
-
-            if ($uploadedFile->saveAs($filePath)) {
-                // Store relative path for database
-                $filePath = '/uploads/' . $fileName;
-            }
-            else
+            if($uploadedFile?->name)
             {
-                Yii::$app->session->setFlash('error', 'Ошибка при загрузке файла');
-                return $this->refresh();
+                $fileName = time() . '_' . $this->sanitizeFilename($uploadedFile->name);
+                $filePath = $uploadDir . $fileName;
+
+                if ($uploadedFile->saveAs($filePath)) {
+                    // Store relative path for database
+                    $filePath = '/uploads/' . $fileName;
+                }
+                else
+                {
+                    Yii::$app->session->setFlash('error', 'Ошибка при загрузке файла');
+                    return $this->refresh();
+                }
             }
 
             Yii::$app->db->createCommand()->insert('Orders', [
                 'name' => $text,
                 'created_at' => date('Y-m-d H:i:s'),
-                'info_about_order' => $info_about_order
+                'updated_at' => date('Y-m-d H:i:s'),
+                'info_about_order' => $info_about_order,
+                'currency' => $currency,
+                'sum' => $sum_order
             ])->execute();
 
             $id_order = Yii::$app->db->getLastInsertID();
 
-            Yii::$app->db->createCommand()->insert('file', [
-                'name' => $uploadedFile->name,
-                'path_file' => $filePath
+            Yii::$app->db->createCommand()->insert('Client_order', [
+                'order_id' => $id_order,
+                'client_id' => $client
             ])->execute();
 
-            $id_file_path = Yii::$app->db->getLastInsertID();
+            if($uploadedFile?->name)
+            {
+                Yii::$app->db->createCommand()->insert('file', [
+                    'name' => $uploadedFile->name,
+                    'path_file' => $filePath
+                ])->execute();
 
-            Yii::$app->db->createCommand()->insert('file_order', [
-                'file_id' => $id_file_path,
-                'order_id' => $id_order
-            ])->execute();
+                $id_file_path = Yii::$app->db->getLastInsertID();
+
+                Yii::$app->db->createCommand()->insert('file_order', [
+                    'file_id' => $id_file_path,
+                    'order_id' => $id_order
+                ])->execute();
+            }
 
             Yii::$app->session->setFlash('success', 'Задача сохранена');
+        }
+        if($post_data == 'update_order')
+        {
+            $text = Yii::$app->request->post('name_order');
+            $info_about_order = Yii::$app->request->post('info_about_order_info');
+            $id_order = Yii::$app->request->post('order_id');
+            $currency = Yii::$app->request->post('currency');
+            $sum_order = Yii::$app->request->post('sum_order');
+            $client = Yii::$app->request->post('client');
 
-            $sql = 'SELECT * FROM "Orders" where is_active = true ORDER BY "created_at"';
-            $AllOrders = Yii::$app->db->createCommand($sql)->queryAll();
+            $uploadedFile = \yii\web\UploadedFile::getInstanceByName('file_order');
+            $filePath = null;
+
+            $uploadDir = Yii::getAlias('@webroot/uploads/');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            if($uploadedFile?->name)
+            {
+                $fileName = time() . '_' . $this->sanitizeFilename($uploadedFile->name);
+                $filePath = $uploadDir . $fileName;
+
+                if ($uploadedFile->saveAs($filePath)) {
+                    // Store relative path for database
+                    $filePath = '/uploads/' . $fileName;
+                }
+                else
+                {
+                    Yii::$app->session->setFlash('error', 'Ошибка при загрузке файла');
+                    return $this->refresh();
+                }
+            }
+
+            Yii::$app->db->createCommand()->update('Client_order', [
+                'client_id' => $client,
+            ],'order_id='.$id_order)->execute();
+
+            Yii::$app->db->createCommand()->update('Orders', [
+                'name' => $text,
+                'updated_at' => date('Y-m-d H:i:s'),
+                'info_about_order' => $info_about_order,
+                'currency' => $currency,
+                'sum' => $sum_order
+            ],'id='.$id_order)->execute();
+
+            if($uploadedFile?->name)
+            {
+                Yii::$app->db->createCommand()->insert('file', [
+                    'name' => $uploadedFile->name,
+                    'path_file' => $filePath
+                ])->execute();
+
+                $id_file_path = Yii::$app->db->getLastInsertID();
+
+                Yii::$app->db->createCommand()->insert('file_order', [
+                    'file_id' => $id_file_path,
+                    'order_id' => $id_order
+                ])->execute();
+            }
+
         }
 
+        $sql = 'SELECT * FROM "Orders"  WHERE is_active = true ORDER BY "created_at"';
+        $AllOrders = Yii::$app->db->createCommand($sql)->queryAll();
+
+        $sql = 'SELECT * FROM "Orders" WHERE is_active = false ORDER BY "created_at"';
+        $EndOrders  = Yii::$app->db->createCommand($sql)->queryAll();
+
+        $sql = 'SELECT * FROM "Clients" c';
+        $Clients  = Yii::$app->db->createCommand($sql)->queryAll();
 
         return $this->render('orders', [
             'AllOrders' => $AllOrders,
-            'EndOrders' => $EndOrders
+            'EndOrders' => $EndOrders,
+            'Clients' => $Clients
         ]);
     }
 
@@ -286,6 +363,11 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionLocation()
+    {
+        return $this->render('location');
     }
 
 
