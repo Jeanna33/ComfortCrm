@@ -4,34 +4,46 @@ namespace app\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
-use app\models\Location;
 
 class LocationController extends Controller
 {
     public function actionSave()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
+        $data = Yii::$app->request->post();
 
-        $lat = Yii::$app->request->post('lat');
-        $lng = Yii::$app->request->post('lng');
-
-        if (Yii::$app->user->isGuest) {
-            return ['status' => 'error', 'message' => 'Требуется авторизация'];
+        if (!isset($data['latitude'], $data['longitude'], $data['user_id'])) {
+            return ['success' => false, 'message' => 'Недостаточно данных'];
         }
 
         $location = new Location();
-        $location->user_id = Yii::$app->user->id;
-        $location->lat = $lat;
-        $location->lng = $lng;
-        $location->created_at = date('Y-m-d H:i:s'); // или можно использовать `new \yii\db\Expression('NOW()')`
+        $location->user_id = (int)$data['user_id'];
+        $location->latitude = (float)$data['latitude'];
+        $location->longitude = (float)$data['longitude'];
+        $location->created_at = time();
 
         if ($location->save()) {
-            return ['status' => 'success'];
+            return ['success' => true];
         }
 
-        return [
-            'status' => 'error',
-            'errors' => $location->getErrors(),
-        ];
+        return ['success' => false, 'message' => $location->getErrors()];
+    }
+
+    public function actionIndex()
+    {
+        if (Yii::$app->user->isGuest)
+        {
+            return $this->goHome();
+        }
+
+        $action = Yii::$app->request->post('action');
+
+        return $this->render('index');
+    }
+
+    // Экшен для страницы с картой
+    public function actionMap()
+    {
+        return $this->render('map'); // Рендерит views/location/map.php
     }
 }

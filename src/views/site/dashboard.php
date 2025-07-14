@@ -265,6 +265,18 @@ AppAsset::register($this);
             $('#button-1').click(function() {
                 window.open('/clients/index');
             });
+
+            $('#button-2').click(function() {
+                window.open('/finance/index');
+            });
+
+            $('#button-7').click(function() {
+                window.open('/location/index');
+            });
+
+            $('#button-5').click(function() {
+                window.open('/calendar/index');
+            });
         });
 
     });
