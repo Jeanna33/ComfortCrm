@@ -73,7 +73,18 @@ $config = [
             'rules' => [
                 'admin' => 'admin/default/index',
                 'admin/<controller:\w+>/<action:\w+>' => 'admin/<controller>/<action>',
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'location'],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'event',
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'POST move/<id>' => 'move',
+                        'GET index' => 'index',
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule', 'controller' => 'location'
+                ],
             ],
         ],
         'authManager' => [

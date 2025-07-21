@@ -58,7 +58,7 @@ AppAsset::register($this);
                             <tr>
                                 <th>ID задачи</th>
                                 <th>Название</th>
-                                <th>Дата окончания</th>
+                                <th>Даты выполнения</th>
                                 <th>Сумма</th>
                                 <th></th>
                             </tr>
@@ -66,11 +66,14 @@ AppAsset::register($this);
                             <?php
                             foreach ($EndOrders as $item => $val)
                             {
+                                $date_begin = !empty($val['date_begin']) ? new DateTime($val['date_begin']) : null;
+                                $date_end = !empty($val['date_end']) ? new DateTime($val['date_end']) : null;
                                 ?>
                                 <tr id="order_<?=$val['id']?>" class="table-row-clickable">
                                     <td><?=$val['id']?></td>
                                     <td><?=$val['name']?></td>
-                                    <td><?=$val['date_end']?></td>
+                                    <td>c <?=$date_begin ? $date_begin->format('d-m-Y') : 'N/A'?> по
+                                        <?=$date_end ? $date_end->format('d-m-Y') : 'N/A'?></td>
                                     <td><?=$val['sum']?> <?=$val['currency']?></td>
                                     <td><input type="checkbox" value="1" name="orders_now[<?=$val['id']?>]"></td>
                                 </tr>
@@ -98,7 +101,7 @@ AppAsset::register($this);
                         <tr>
                             <th>ID задачи</th>
                             <th>Название</th>
-                            <th>Дата добавления</th>
+                            <th>Даты выполнения</th>
                             <th>Сумма</th>
                             <th></th>
                         </tr>
@@ -106,11 +109,14 @@ AppAsset::register($this);
                         <?php
                         foreach ($AllOrders as $item => $val)
                         {
+                            $date_begin = !empty($val['date_begin']) ? new DateTime($val['date_begin']) : null;
+                            $date_end = !empty($val['date_end']) ? new DateTime($val['date_end']) : null;
                             ?>
                             <tr id="order_<?=$val['id']?>" class="table-row-clickable">
                                 <td><?=$val['id']?></td>
                                 <td><?=$val['name']?></td>
-                                <td><?=$val['created_at']?></td>
+                                <td>c <?=$date_begin ? $date_begin->format('d-m-Y') : 'N/A'?> по
+                                    <?=$date_end ? $date_end->format('d-m-Y') : 'N/A'?></td>
                                 <td><?=$val['sum']?> <?=$val['currency']?></td>
                                 <td><input type="checkbox" value="1" name="orders[<?=$val['id']?>]"></td>
                             </tr>
@@ -174,6 +180,14 @@ AppAsset::register($this);
                             </select>
                         </div>
                         <div class="form-group">
+                            <label>Дата начала выполнения задачи</label>
+                            <input type="date" class="form-control" name="start_time" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Дата окончания выполнения задачи</label>
+                            <input type="date" class="form-control" name="end_time" required>
+                        </div>
+                        <div class="form-group">
                             <input type="submit" value="Сохранить" class="btn btn-success">
                         </div>
 
@@ -231,6 +245,14 @@ AppAsset::register($this);
                                     <option value="<?=$val['id']?>"><?=$val['company_name']?></option>
                                 <?php }?>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Дата начала выполнения задачи 1</label>
+                            <input type="date" class="form-control" name="start_time" id="start_time">
+                        </div>
+                        <div class="form-group">
+                            <label>Дата окончания выполнения задачи 2</label>
+                            <input type="date" class="form-control" name="end_time" id="end_time">
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Сохранить изменения" class="btn btn-success" id="save_order_changes">
@@ -352,7 +374,10 @@ AppAsset::register($this);
                             $('#sum_order_info').val(response.data.sum);
                             $('#currency_sum').val(response.data.currency);
                             $('#client_company').val(response.data_client.id);
-                            console.log(response);
+                            $('#start_time').val(response.data.date_begin?.split(' ')[0] || '');
+                            $('#end_time').val(response.data.date_end?.split(' ')[0] || '');
+                            console.log(response.data.date_begin);
+                            console.log(response.data.date_end);
 
                             // Отображаем файл, если он есть
                             if (response.files && response.files.length > 0)

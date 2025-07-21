@@ -16,6 +16,7 @@ class StyleAsset extends AssetBundle
         'js/raphael.min.js',
         'js/morris.js',
         'js/bootstrap-datepicker.min.js',
-        'js/bootstrap-datepicker.ru.min.js'
+        'js/bootstrap-datepicker.ru.min.js',
+        'js/fullcalendar/dist/index.global.js'
     ];
 }

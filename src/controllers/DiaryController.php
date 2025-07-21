@@ -89,8 +89,16 @@ class DiaryController extends Controller
             }
 
         }
+        $perPage = 5; // Записей на страницу
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $offset = ($page - 1) * $perPage;
 
-        $sql = 'SELECT * FROM "diary_lists" ORDER BY "created_at"';
+        $sql = 'SELECT COUNT(*) FROM "diary_lists"';
+        $result = Yii::$app->db->createCommand($sql)->queryOne();
+
+        $totalPages = ceil($result['count'] / $perPage);
+
+        $sql = 'SELECT * FROM "diary_lists" ORDER BY "created_at" LIMIT '.$perPage.' OFFSET '.$offset;
         $rows = Yii::$app->db->createCommand($sql)->queryAll();
 
         $ids = [];
@@ -122,7 +130,10 @@ WHERE diary_list_id in ('.$idsString.')';
 
         return $this->render('index',[
             'AllLists' => $AllLists,
-            'AllListsFiles' => $AllListsFiles
+            'AllListsFiles' => $AllListsFiles,
+            'totalPages' => $totalPages,
+            'perPage' => $perPage,
+            'page' => $page
         ]);
     }
 

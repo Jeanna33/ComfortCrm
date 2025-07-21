@@ -71,6 +71,28 @@ AppAsset::register($this);
             }
             ?>
             </table>
+            <nav aria-label="Навигация по страницам">
+                <ul class="pagination justify-content-center">
+                    <?php if ($page > 1): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?page=<?= $page - 1 ?>" aria-label="Предыдущая">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php
+                    // Показываем ограниченное количество страниц вокруг текущей
+                    $startPage = max(1, $page - 2);
+                    $endPage = min($totalPages, $page +1);
+
+                    for ($i = $startPage; $i <= $endPage; $i++): ?>
+                        <li class="page-item <?= $i == $page ? 'active' : '' ?>">
+                            <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

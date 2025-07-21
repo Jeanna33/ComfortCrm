@@ -137,6 +137,10 @@ class SiteController extends Controller
             $currency = Yii::$app->request->post('currency');
             $sum_order = Yii::$app->request->post('sum_order');
             $client = Yii::$app->request->post('client');
+            $sum_order = Yii::$app->request->post('sum_order');
+
+            $start_time = Yii::$app->request->post('start_time');
+            $end_time = Yii::$app->request->post('end_time');
 
             $uploadedFile = \yii\web\UploadedFile::getInstanceByName('file_order');
             $filePath = null;
@@ -168,7 +172,9 @@ class SiteController extends Controller
                 'updated_at' => date('Y-m-d H:i:s'),
                 'info_about_order' => $info_about_order,
                 'currency' => $currency,
-                'sum' => $sum_order
+                'sum' => $sum_order,
+                'date_begin' => $start_time,
+                'date_end' => $end_time
             ])->execute();
 
             $id_order = Yii::$app->db->getLastInsertID();
@@ -204,6 +210,9 @@ class SiteController extends Controller
             $sum_order = Yii::$app->request->post('sum_order');
             $client = Yii::$app->request->post('client');
 
+            $start_time = Yii::$app->request->post('start_time');
+            $end_time = Yii::$app->request->post('end_time');
+
             $uploadedFile = \yii\web\UploadedFile::getInstanceByName('file_order');
             $filePath = null;
 
@@ -237,7 +246,9 @@ class SiteController extends Controller
                 'updated_at' => date('Y-m-d H:i:s'),
                 'info_about_order' => $info_about_order,
                 'currency' => $currency,
-                'sum' => $sum_order
+                'sum' => $sum_order,
+                'date_begin' => $start_time,
+                'date_end' => $end_time
             ],'id='.$id_order)->execute();
 
             if($uploadedFile?->name)
@@ -257,10 +268,10 @@ class SiteController extends Controller
 
         }
 
-        $sql = 'SELECT * FROM "Orders"  WHERE is_active = true ORDER BY "created_at"';
+        $sql = 'SELECT * FROM "Orders"  WHERE is_active = true and (delete is null or delete=0)ORDER BY "created_at"';
         $AllOrders = Yii::$app->db->createCommand($sql)->queryAll();
 
-        $sql = 'SELECT * FROM "Orders" WHERE is_active = false ORDER BY "created_at"';
+        $sql = 'SELECT * FROM "Orders" WHERE is_active = false and (delete is null or delete=0) ORDER BY "created_at"';
         $EndOrders  = Yii::$app->db->createCommand($sql)->queryAll();
 
         $sql = 'SELECT * FROM "Clients" c';

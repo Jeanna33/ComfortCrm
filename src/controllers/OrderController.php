@@ -88,11 +88,10 @@ where co.order_id = '.$id_order;
 
         $ids = implode(', ', array_map('intval', $selectedOrders));
 
-        $sql = '
-            DELETE FROM "Orders" WHERE id IN ('.$ids.')
-        ';
 
-        Yii::$app->db->createCommand($sql)->execute();
+        Yii::$app->db->createCommand()->update('Orders', [
+            'delete' => 1,
+        ],'id in ('.$ids.')')->execute();
 
 
         return [
